@@ -87,6 +87,15 @@ const getEditPlantPage = async (req, res) => {
   }
 };
 
+const getNewPlantForm = async (req, res) => {
+  const categories = await queries.getAllCategories();
+  res.render("index", {
+    title: "Add New Plant",
+    categories: categories,
+    body: "add",
+  });
+};
+
 const postUpdatePlant = async (req, res) => {
   const plantId = req.params.plantid;
 
@@ -158,4 +167,5 @@ module.exports = {
   updateQuantity,
   getEditPlantPage,
   postUpdatePlant,
+  getNewPlantForm,
 };

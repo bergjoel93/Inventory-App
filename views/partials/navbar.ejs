@@ -1,11 +1,39 @@
 <!-- views/partials/navbar.ejs -->
-<nav>
-  <div id="searchbar-container">
-    <form action="search" method="post">
-      <div id="searchbar">
-        <input type="text" placeholder="Search" name="search" id="search" />
-        <button><span class="material-symbols-outlined"> search </span></button>
-      </div>
-    </form>
-  </div>
+
+<nav class="navbar">
+  <ul class="navbar-nav">
+    <li class="logo">
+      <a href="/" class="nav-link">
+        <span class="link-text">Plant Inventory App</span>
+        <span class="material-symbols-outlined"> inventory </span>
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="/" class="nav-link">
+        <span class="material-symbols-outlined"> house </span
+        ><span class="link-text">Home</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="/add" class="nav-link"
+        ><span class="material-symbols-outlined"> psychiatry </span>
+        <span class="link-text">Add New Plant</span>
+      </a>
+    </li>
+
+    <li class="nav-item">
+      <a href="#" class="nav-link">
+        <span class="material-symbols-outlined"> edit </span>
+        <span class="link-text">Edit Categories</span>
+      </a>
+    </li>
+
+    <li class="nav-item" id="themeButton">
+      <a href="" class="nav-link">
+        <span class="material-symbols-outlined"> dark_mode </span>
+        <span class="link-text">Theme</span></a
+      >
+    </li>
+  </ul>
 </nav>

@@ -1,0 +1,113 @@
+<!-- views/partials/add.ejs -->
+
+<div id="add-container">
+  <form action="/plant/add" method="post">
+    <h1>Add New Plant</h1>
+
+    <div id="input-container">
+      <label for="name">Name</label>
+      <input id="name" name="name" type="text" />
+    </div>
+
+    <div id="input-container">
+      <label for="scientificname">Scientific Name</label>
+      <input id="scientificname" name="scientificname" type="text" />
+    </div>
+
+    <div id="input-container">
+      <label for="description">Description</label>
+      <textarea id="description" name="description"> </textarea>
+    </div>
+
+    <div id="input-container">
+      <label for="imgurl">Image URL</label>
+      <input id="imgurl" name="imgurl" type="text" />
+    </div>
+
+    <!-- Quantity Adjuster -->
+    <div id="quantity-adjuster-container">
+      <div id="quantity-adjuster">
+        <button id="decrease-quantity" type="button">-</button>
+        <input type="number" id="quantity-input" name="quantity" value="1" />
+        <button id="increase-quantity" type="button">+</button>
+      </div>
+    </div>
+
+    <div id="options-container">
+      <label for="type">Type</label>
+      <select name="category" id="category">
+        <% categories.forEach(category => { %>
+        <option value="<%=category.categoryid%>"><%=category.name %></option>
+
+        <% })%>
+        <option value="other-type">Other Type</option>
+      </select>
+    </div>
+
+    <div id="new-category-form">
+      <h3>Add a New Type</h3>
+      <div id="input-container">
+        <label for="newCategoryName">Type Name</label>
+        <input type="text" name="newCategoryName" id="newCategoryName" />
+      </div>
+
+      <div id="input-container">
+        <label for="categoryDescription">Category Description</label>
+        <textarea id="categoryDescription" name="categoryDescription">
+        </textarea>
+
+        <div id="input-container">
+          <label for="categoryImgUrl">Image URL</label>
+          <input id="categoryImgUrl" name="categoryImgUrl" type="text" />
+        </div>
+      </div>
+    </div>
+
+    <button type="submit">Save!</button>
+  </form>
+</div>
+
+<script>
+  // Quantity input
+  const quantityInput = document.getElementById("quantity-input");
+  const increaseButton = document.getElementById("increase-quantity");
+  const decreaseButton = document.getElementById("decrease-quantity");
+
+  // Event listeners for the buttons
+  increaseButton.addEventListener("click", () => {
+    const newQuantity = parseInt(quantityInput.value) + 1;
+    quantityInput.value = newQuantity;
+  });
+
+  decreaseButton.addEventListener("click", () => {
+    let newQuantity = parseInt(quantityInput.value) - 1;
+    if (newQuantity < 0) newQuantity = 0; // Prevent negative quantity
+    quantityInput.value = newQuantity;
+  });
+
+  // options category adder
+  const select = document.getElementById("category");
+  select.addEventListener("change", () => {
+    if (select.value === "other-type") {
+      showNewCategoryForm();
+    } else {
+      hideNewCategoryForm();
+    }
+  });
+
+  function showNewCategoryForm() {
+    const newCategoryForm = document.getElementById("new-category-form");
+    newCategoryForm.style.display = "block";
+  }
+  function hideNewCategoryForm() {
+    const newCategoryForm = document.getElementById("new-category-form");
+    newCategoryForm.style.display = "none";
+    // clear out the new category form.
+    const categoryImgUrl = document.getElementById("categoryImgUrl");
+    const categoryDescription = document.getElementById("categoryDescription");
+    const newCategoryName = document.getElementById("newCategoryName");
+    categoryImgUrl.value = "";
+    categoryDescription.value = "";
+    newCategoryName.value = "";
+  }
+</script>
