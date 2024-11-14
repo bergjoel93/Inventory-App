@@ -1,0 +1,27 @@
+<!-- views/plants.ejs -->
+
+<div id="breadcrumbs-container">
+  <ul class="breadcrumb">
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li><a href="#"><%= categoryName %></a></li>
+  </ul>
+</div>
+
+<h2><%= categoryName %></h2>
+
+<div id="card-container">
+  <% plants.forEach(plant =>{ %>
+  <div id="card">
+    <a href="/plant/<%= plant.plantid %>">
+      <div id="img-container">
+        <img src="<%= plant.imgurl %>" alt="<%=plant.name%> img" />
+      </div>
+      <div id="name-container">
+        <h3><%= plant.name %></h3>
+      </div>
+    </a>
+  </div>
+  <%}) %>
+</div>

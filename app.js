@@ -1,14 +1,23 @@
+//app.js
+
 const express = require("express");
 const app = express();
 const PORT = 3000;
 
+// import router
+const router = require("./routes/router.js");
+
 // Set EJS as the template engine
 app.set("view engine", "ejs");
 
-// Define index route
-app.get("/", (req, res) => {
-  res.render("index", { title: "Home" });
-});
+// Serve static files from the "public" directory
+app.use(express.static("public"));
+
+// Middleware to parse form data
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.use("/", router);
 
 // Start the server
 app.listen(PORT, () => {

@@ -1,0 +1,99 @@
+<!-- views/plant.ejs -->
+
+<div id="breadcrumbs-container">
+  <ul class="breadcrumb">
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li><a href="/plants/<%=category.categoryid%>"><%= category.name %></a></li>
+    <li><a href="#"><%=plant.name%></a></li>
+  </ul>
+</div>
+
+<div id="plant-container">
+  <div id="plant-img-container">
+    <img src="<%=plant.imgurl%>" alt="<%=plant.name%> picture" />
+  </div>
+  <div id="plant-info-container">
+    <h2><%=plant.name%></h2>
+    <h3><%= plant.scientificname %></h3>
+    <p><%= plant.description %></p>
+
+    <!-- Quantity Adjuster -->
+    <div id="quantity-adjuster-container">
+      <div id="quantity-adjuster">
+        <button id="decrease-quantity">-</button>
+        <input
+          type="number"
+          id="quantity-input"
+          value="<%= plant.quantity %>"
+        />
+        <button id="increase-quantity">+</button>
+      </div>
+    </div>
+
+    <div id="edit-plant-container">
+      <button id="edit-plant-button">Edit This Plant</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const quantityInput = document.getElementById("quantity-input");
+  const increaseButton = document.getElementById("increase-quantity");
+  const decreaseButton = document.getElementById("decrease-quantity");
+  const plantId = "<%= plant.plantid %>";
+
+  const editButton = document.getElementById("edit-plant-button");
+
+  editButton.addEventListener("click", () => {
+    // Redirect to the edit page for this plant.
+    window.location.href = `/plant/edit/${plantId}`;
+  });
+
+  // Function to update quantity in the database
+  async function updateQuantity(newQuantity) {
+    try {
+      const response = await fetch(`/update-quantity/${plantId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ quantity: newQuantity }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update quantity");
+      }
+
+      const data = await response.json();
+      console.log("Quantity updated successfully:", data);
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+    }
+  }
+
+  // Event listeners for the buttons
+  increaseButton.addEventListener("click", () => {
+    const newQuantity = parseInt(quantityInput.value) + 1;
+    quantityInput.value = newQuantity;
+    updateQuantity(newQuantity); // Call the function to update in the database
+  });
+
+  decreaseButton.addEventListener("click", () => {
+    let newQuantity = parseInt(quantityInput.value) - 1;
+    if (newQuantity < 0) newQuantity = 0; // Prevent negative quantity
+    quantityInput.value = newQuantity;
+    updateQuantity(newQuantity); // Call the function to update in the database
+  });
+
+  quantityInput.addEventListener("change", () => {
+    let oldQuantity = parseInt("<%= plant.quantity%>");
+    let newQuantity = parseInt(quantityInput.value);
+    if (newQuantity < 0 || isNaN(newQuantity)) {
+      newQuantity = oldQuantity; // reset to old quantity if input is bad.
+    }
+    quantityInput.value = newQuantity;
+    updateQuantity(newQuantity);
+  });
+</script>
