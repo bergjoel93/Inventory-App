@@ -1,6 +1,55 @@
 // controllers/controller.js
 const queries = require("../db/queries"); // Import the queries file
 
+const { validateCategoryData } = require("../validators/categoryValidator");
+
+// Add New Plant and Sanitize form data.
+const postAddNewPlant = async (req, res) => {
+  const {
+    name,
+    scientificname,
+    description,
+    imgurl,
+    quantity,
+    category, // Can be an existing category ID or "other-type"
+    newCategoryName,
+    categoryDescription,
+    categoryImgUrl,
+  } = req.body;
+
+  // Set imgurl to null if it's an empty string
+  const processedImgUrl = imgurl.trim() === "" ? null : imgurl;
+
+  try {
+    const categoryId = await createNewCategoryIfNeeded(
+      // if new category created, will return id.
+      category,
+      newCategoryName,
+      categoryDescription,
+      categoryImgUrl
+    );
+
+    // Add the new plant to the database
+    await queries.addPlant(
+      name,
+      scientificname,
+      description,
+      processedImgUrl,
+      quantity,
+      categoryId
+    );
+
+    const newPlant = await queries.getPlantByName(name);
+    const newPlantId = newPlant ? newPlant.plantid : null;
+    console.log("imgurl:", imgurl);
+
+    res.redirect(`/plant/${newPlantId}`); // redirect to new plant page.
+  } catch (error) {
+    console.error("Error retrieving :", error);
+    res.status(500).send("Error retrieving categories");
+  }
+};
+
 // Define getCategories function
 const getCategories = async (req, res) => {
   try {
@@ -89,15 +138,30 @@ const getEditPlantPage = async (req, res) => {
 
 const getNewPlantForm = async (req, res) => {
   const categories = await queries.getAllCategories();
-  res.render("index", {
-    title: "Add New Plant",
-    categories: categories,
-    body: "add",
-  });
+  req.categores =
+    categories / // Attach categories to req for validation middleware.
+    res.render("index", {
+      title: "Add New Plant",
+      categories: categories,
+      body: "add",
+      errors: [],
+    });
 };
 
 const postUpdatePlant = async (req, res) => {
   const plantId = req.params.plantid;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    // If validation errors, retreive categories and re-render form with errors.
+    const categories = await queries.getAllCategories();
+    return res.status(400).render("index", {
+      title: "Add new plant",
+      categories: categories,
+      body: "add",
+      errors: errors.array(), // pass validation errors to view
+      formData: req.body, // Pass current form data to repopulate the form.
+    });
+  }
 
   // Retrieve updated data from req.body
   const {
@@ -148,13 +212,12 @@ const createNewCategoryIfNeeded = async (
   categoryImgUrl
 ) => {
   if (category === "other-type") {
-    // Add the new category and retrieve the new category ID
-    await queries.addCategory(
+    // Add the new category to the database
+    const newCategory = await queries.addCategory(
       newCategoryName,
       categoryDescription,
       categoryImgUrl
     );
-    const newCategory = await queries.getCategoryByName(newCategoryName);
     return newCategory.categoryid;
   }
   return category; // If not "other-type", return the original category ID
@@ -168,4 +231,5 @@ module.exports = {
   getEditPlantPage,
   postUpdatePlant,
   getNewPlantForm,
+  postAddNewPlant,
 };

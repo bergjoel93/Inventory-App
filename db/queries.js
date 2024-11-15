@@ -2,8 +2,7 @@
 // queries.js
 const db = require("./db");
 
-const DEFAULT_IMAGE_URL =
-  "https://banner2.cleanpng.com/20180404/hqe/avhx8fkiv.webp";
+const DEFAULT_IMAGE_URL = "/img/defaultImg.png";
 
 // Function to get a single plant by plantId
 const getPlantById = async (plantId) => {
@@ -122,6 +121,52 @@ const getCategoryByName = async (name) => {
   }
 };
 
+// Function to add a new plant to the database
+// Function to add a new plant to the database
+const addPlant = async (
+  name,
+  scientificname,
+  description,
+  imgurl,
+  quantity,
+  categoryid
+) => {
+  try {
+    const result = await db.query(
+      `INSERT INTO plants (name, scientificname, description, imgurl, quantity, categoryid) 
+       VALUES ($1, $2, $3, COALESCE($4, $5), $6, $7) 
+       RETURNING *`,
+      [
+        name,
+        scientificname,
+        description,
+        imgurl,
+        DEFAULT_IMAGE_URL,
+        quantity,
+        categoryid,
+      ]
+    );
+    return result.rows[0]; // Returns the newly created plant record
+  } catch (error) {
+    console.error("Error adding new plant:", error);
+    throw error;
+  }
+};
+
+// Get plant in db by name.
+const getPlantByName = async (name) => {
+  try {
+    const result = await db.query(
+      "SELECT * FROM plants WHERE LOWER(name) = LOWER($1)", // SQL query to match name case-insensitively
+      [name] // Pass the plant name as a parameter
+    );
+    return result.rows[0]; // Return the first matching plant (assuming unique names)
+  } catch (error) {
+    console.error("Error fetching plant by name:", error);
+    throw error;
+  }
+};
+
 // Export the functions for use in other parts of your app
 module.exports = {
   getAllCategories,
@@ -132,4 +177,6 @@ module.exports = {
   updatePlant,
   addCategory,
   getCategoryByName,
+  addPlant,
+  getPlantByName,
 };

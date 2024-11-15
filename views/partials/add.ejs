@@ -1,8 +1,16 @@
 <!-- views/partials/add.ejs -->
 
 <div id="add-container">
-  <form action="/plant/add" method="post">
+  <form action="/add/new" method="post">
     <h1>Add New Plant</h1>
+
+    <% if (errors) { %>
+    <ul>
+      <% errors.forEach(error => { %>
+      <li><%= error.msg %></li>
+      <% }) %>
+    </ul>
+    <% } %>
 
     <div id="input-container">
       <label for="name">Name</label>
@@ -46,6 +54,7 @@
 
     <div id="new-category-form">
       <h3>Add a New Type</h3>
+      <input type="hidden" id="hiddenInput" name="newCategory" value="" />
       <div id="input-container">
         <label for="newCategoryName">Type Name</label>
         <input type="text" name="newCategoryName" id="newCategoryName" />
@@ -96,12 +105,15 @@
   });
 
   function showNewCategoryForm() {
+    const hiddenInput = document.getElementById("hiddenInput");
     const newCategoryForm = document.getElementById("new-category-form");
     newCategoryForm.style.display = "block";
+    hiddenInput.value = "true"; // set hidden input to true.
   }
   function hideNewCategoryForm() {
     const newCategoryForm = document.getElementById("new-category-form");
     newCategoryForm.style.display = "none";
+    const hiddenInput = document.getElementById("hiddenInput");
     // clear out the new category form.
     const categoryImgUrl = document.getElementById("categoryImgUrl");
     const categoryDescription = document.getElementById("categoryDescription");
@@ -109,5 +121,6 @@
     categoryImgUrl.value = "";
     categoryDescription.value = "";
     newCategoryName.value = "";
+    hiddenInput.value = ""; // set hiddenInput value to nothing.
   }
 </script>
