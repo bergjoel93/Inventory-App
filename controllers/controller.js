@@ -27,7 +27,7 @@ const postAddNewPlant = async (req, res) => {
       newCategoryName,
       categoryDescription,
       categoryImgUrl
-    );
+    ); //
 
     // Add the new plant to the database
     await queries.addPlant(
