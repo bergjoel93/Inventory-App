@@ -1,4 +1,5 @@
 // validators/plantValidator.js
+const queries = require("../db/queries");
 const { body, validationResult } = require("express-validator");
 
 const validatePlant = [
@@ -71,20 +72,25 @@ const validatePlant = [
     .withMessage("New category image URL must be valid."),
 ];
 
-const checkValidationResults = (req, res, next) => {
+const checkValidationResults = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // If there are validation errors, render the form with the errors and repopulated data
-    const categories = req.categories || [];
-    return res.status(400).render("index", {
-      title: "Add New Plant",
-      body: "add",
-      categories: categories, // You should fetch this in your controller before rendering
-      errors: errors.array(), // Pass the validation errors to the view
-      formData: req.body, // Repopulate the form with the current data
-    });
+    try {
+      const categories = await queries.getAllCategories(); // Fetch categories for form rendering
+
+      return res.status(400).render("index", {
+        title: "Add New Plant",
+        body: "add",
+        categories: categories, // Pass categories to render them in the dropdown
+        errors: errors.array(), // Pass the validation errors to the view
+        formData: req.body, // Repopulate the form with the current data
+      });
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      return res.status(500).send("Error fetching categories");
+    }
   }
-  console.log("No errors found");
+  console.log("No validation errors found");
   next();
 };
 
