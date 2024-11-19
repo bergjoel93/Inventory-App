@@ -1,4 +1,18 @@
 <div id="edit-categories-container">
     <p>Warning: If a category is deleted it will delete all of the plants within that category. Only edit categories with extreme caution!!!</p>
+
+    <div id="categories-container">
+        <ul>
+            <% categories.forEach(category =>{ %>
+                <li>
+                    <div id="cat-list-container">
+                        <img src="<%=category.imgurl %>" alt="">
+                    </div>
+                    <h3 id="category-name"><%= category.name %></h3>
+                    <a href="/editCategory/<%=category.categoryid %>" id="edit-category-button">Edit Category</a>              
+                </li>
+            <% }) %>
+        </ul>
+    </div>
     
 </div>

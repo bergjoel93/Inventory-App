@@ -10,3 +10,7 @@ TODO: Add an "Add New Plant" Button.
 
 - Finish update old plant controller logic.
 - update the create new plant controller to actually create db items.
+
+- Finish the editCategories page. Maybe use a table or something...
+- Finish the editCategory page.
+  Finish edit category logic.
