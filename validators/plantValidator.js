@@ -2,7 +2,49 @@
 const queries = require("../db/queries");
 const { body, validationResult } = require("express-validator");
 
-const validateOldPlant = [];
+const validateOldPlant = [
+  body("scientificname")
+    .trim()
+    .notEmpty()
+    .withMessage("Scientific name is required.")
+    .isLength({ min: 2, max: 60 })
+    .withMessage("Scientific name must be between 2 and 60 characters.")
+    .escape()
+    .customSanitizer((value) => {
+      return value.replace(/&#x27;/g, "'"); // Restore single quotes
+    }),
+
+  body("description")
+    .trim()
+    .notEmpty()
+    .withMessage("Description is required.")
+    .customSanitizer((value) => {
+      return value
+        .replace(/&#x27;/g, "'") // Restore single quotes
+        .replace(/&quot;/g, '"') // Restore double quotes
+        .replace(/&amp;/g, "&") // Restore ampersands
+        .replace(/&lt;/g, "<") // Restore less-than signs
+        .replace(/&gt;/g, ">"); // Restore greater-than signs
+    })
+    .escape(),
+
+  body("imgurl")
+    .trim()
+    .optional({ checkFalsy: true }) // This allows empty or undefined values
+    .custom((value) => {
+      // Allow the specific string "/img/defaultImg.png"
+      if (value === "/img/defaultImg.png") {
+        return true;
+      }
+      // Otherwise, check if it's a valid URL
+      if (!/^https?:\/\/[^\s$.?#].[^\s]*$/.test(value)) {
+        throw new Error(
+          "Image URL must be a valid URL or '/img/defaultImg.png'.",
+        );
+      }
+      return true;
+    }),
+];
 
 const validateNewPlant = [
   // General plant validations
@@ -18,6 +60,9 @@ const validateNewPlant = [
       if (existingPlant) {
         throw new Error("A plant with this name already exists.");
       }
+    })
+    .customSanitizer((value) => {
+      return value.replace(/&#x27;/g, "'"); // Restore single quotes
     }),
 
   body("scientificname")
@@ -25,22 +70,39 @@ const validateNewPlant = [
     .notEmpty()
     .withMessage("Scientific name is required.")
     .isLength({ min: 2, max: 60 })
-    .withMessage("Scientific name must be between 2 and 60 characters.")
-    .escape(),
+    .escape()
+    .withMessage("Scientific name must be between 2 and 60 characters."),
 
   body("description")
     .trim()
     .notEmpty()
     .withMessage("Description is required.")
-    .isLength({ max: 300 })
-    .withMessage("Description must be under 300 characters.")
-    .escape(),
+    .escape()
+    .customSanitizer((value) => {
+      return value
+        .replace(/&#x27;/g, "'") // Restore single quotes
+        .replace(/&quot;/g, '"') // Restore double quotes
+        .replace(/&amp;/g, "&") // Restore ampersands
+        .replace(/&lt;/g, "<") // Restore less-than signs
+        .replace(/&gt;/g, ">"); // Restore greater-than signs
+    }),
 
   body("imgurl")
     .trim()
     .optional({ checkFalsy: true }) // This allows empty or undefined values
-    .isURL()
-    .withMessage("Image URL must be a valid URL."),
+    .custom((value) => {
+      // Allow the specific string "/img/defaultImg.png"
+      if (value === "/img/defaultImg.png") {
+        return true;
+      }
+      // Otherwise, check if it's a valid URL
+      if (!/^https?:\/\/[^\s$.?#].[^\s]*$/.test(value)) {
+        throw new Error(
+          "Image URL must be a valid URL or '/img/defaultImg.png'.",
+        );
+      }
+      return true;
+    }),
 
   body("quantity")
     .isInt({ min: 0 })
@@ -72,8 +134,12 @@ const validateNewPlant = [
     .trim()
     .notEmpty()
     .withMessage("New category description is required.")
-    .isLength({ min: 1, max: 300 })
-    .withMessage("New category description must be under 300 characters.")
+    .isLength({ min: 1 })
+    .customSanitizer((value) => {
+      return value
+        .replace(/&#x27;/g, "'") // Restore single quotes
+        .replace(/&quot;/g, '"'); // Restore double quotes
+    })
     .escape(),
 
   body("categoryImgUrl")
@@ -84,29 +150,8 @@ const validateNewPlant = [
     .withMessage("New category image URL must be valid."),
 ];
 
-// const checkValidationResults = async (req, res, next) => {
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     try {
-//       const categories = await queries.getAllCategories(); // Fetch categories for form rendering
-
-//       return res.status(400).render("index", {
-//         title: "Add New Plant",
-//         body: "add",
-//         categories: categories, // Pass categories to render them in the dropdown
-//         errors: errors.array(), // Pass the validation errors to the view
-//         formData: req.body, // Repopulate the form with the current data
-//       });
-//     } catch (error) {
-//       console.error("Error fetching categories:", error);
-//       return res.status(500).send("Error fetching categories");
-//     }
-//   }
-//   console.log("No validation errors found");
-//   next();
-// };
-
 module.exports = {
   validateNewPlant,
+  validateOldPlant,
   // checkValidationResults,
 };

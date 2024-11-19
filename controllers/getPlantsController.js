@@ -52,12 +52,20 @@ const getEditPlantPage = async (req, res) => {
   const plantId = req.params.plantid;
   const plant = await queries.getPlantById(plantId);
   const categories = await queries.getAllCategories();
+
+  // Retrieve and decode errors from the query string, if present
+  const errors = req.query.errors
+    ? JSON.parse(decodeURIComponent(req.query.errors))
+    : [];
+  console.log("Errors", errors);
+
   if (plant) {
     res.render("index", {
       title: `Edit ${plant.name}`,
       plant: plant,
       body: "edit",
       categories: categories,
+      errors: errors,
     });
   }
 };

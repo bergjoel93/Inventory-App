@@ -158,6 +158,7 @@ ul.breadcrumb li a:hover {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
   gap: 18px;
   padding: 24px;
 }
@@ -183,6 +184,10 @@ ul.breadcrumb li a:hover {
 #plant-info-container h3 {
   font-style: italic;
   font-weight: 300;
+}
+
+#plant-description {
+  max-width: 400px;
 }
 
 #quantity-adjuster-container {
@@ -249,7 +254,9 @@ ul.breadcrumb li a:hover {
   color: black;
   border-radius: 8px;
   font-weight: bold;
-  transition: background-color 0.5s ease, color 0.5s ease;
+  transition:
+    background-color 0.5s ease,
+    color 0.5s ease;
   cursor: pointer;
 }
 

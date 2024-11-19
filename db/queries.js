@@ -73,19 +73,17 @@ const updatePlantQuantity = async (plantId, quantity) => {
 
 const updatePlant = async (
   plantId,
-  name,
   scientificName,
   description,
   imgURL,
-  quantity,
-  categoryId
+  quantity
 ) => {
   try {
     const result = await db.query(
       `UPDATE plants 
-       SET name = $1, scientificname = $2, description = $3, imgurl = $4, quantity = $5, categoryid = $6
-       WHERE plantid = $7`,
-      [name, scientificName, description, imgURL, quantity, categoryId, plantId]
+       SET scientificname = $1, description = $2, imgurl = $3, quantity = $4
+       WHERE plantid = $5`,
+      [scientificName, description, imgURL, quantity, plantId]
     );
     return result;
   } catch (error) {
@@ -93,6 +91,7 @@ const updatePlant = async (
     throw error;
   }
 };
+
 
 const addCategory = async (name, description, imgURL = null) => {
   try {

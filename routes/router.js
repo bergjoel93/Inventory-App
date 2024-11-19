@@ -34,7 +34,8 @@ router.post("/add/new", postPlantsController.postAddNewPlant);
 // deletes plant from the database.
 router.post(
   "/delete/plant/:plantid/:categoryid",
-  postPlantsController.postDeletePlant
+  postPlantsController.postDeletePlant,
 );
+router.get("/editCategories", categoriesController.getEditCategories);
 
 module.exports = router;

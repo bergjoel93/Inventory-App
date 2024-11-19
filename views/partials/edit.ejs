@@ -4,6 +4,16 @@
   <form action="/plant/update/<%= plant.plantid %>" method="post">
     <h1>Edit <%= plant.name%></h1>
 
+    <div id="errors-container">
+      <% if (errors) { %>
+      <ul>
+        <% errors.forEach(error => { %>
+        <li><%= error.msg %></li>
+        <% }) %>
+      </ul>
+      <% } %>
+    </div>
+
     <div id="input-container">
       <label for="name">Name</label>
       <input id="name" name="name" type="text" value="<%=plant.name %>" disabled/>

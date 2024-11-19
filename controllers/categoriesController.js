@@ -4,6 +4,21 @@
  */
 const queries = require("../db/queries"); // Import the queries file
 
+//
+const getEditCategories = async (req, res) => {
+  try {
+    const categories = await queries.getAllCategories();
+    res.render("index", {
+      title: "Edit Categories",
+      body: "editCategories",
+      categories: categories,
+    });
+  } catch (error) {
+    console.error("Error retrieving categories:", error);
+    res.status(500).send("Error retrieving categories");
+  }
+};
+
 // Define getCategories function
 const getCategories = async (req, res) => {
   try {
@@ -25,14 +40,14 @@ const createNewCategoryIfNeeded = async (
   category,
   newCategoryName,
   categoryDescription,
-  categoryImgUrl
+  categoryImgUrl,
 ) => {
   if (category === "other-type") {
     // Add the new category to the database
     const newCategory = await queries.addCategory(
       newCategoryName,
       categoryDescription,
-      categoryImgUrl
+      categoryImgUrl,
     );
     return newCategory.categoryid;
   }
@@ -42,4 +57,5 @@ const createNewCategoryIfNeeded = async (
 module.exports = {
   getCategories,
   createNewCategoryIfNeeded,
+  getEditCategories,
 };

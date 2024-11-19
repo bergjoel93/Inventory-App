@@ -20,22 +20,22 @@
 
     <div id="input-container">
       <label for="name">Name</label>
-      <input id="name" name="name" type="text" required />
+      <input id="name" name="name" type="text" required class="active" />
     </div>
 
     <div id="input-container">
       <label for="scientificname">Scientific Name</label>
-      <input id="scientificname" name="scientificname" type="text" required />
+      <input id="scientificname" name="scientificname" type="text" required class="active"/>
     </div>
 
     <div id="input-container">
       <label for="description">Description</label>
-      <textarea id="description" name="description" required> </textarea>
+      <textarea id="description" name="description" required class="active"> </textarea>
     </div>
 
     <div id="input-container">
       <label for="imgurl">Image URL</label>
-      <input id="imgurl" name="imgurl" type="text" />
+      <input id="imgurl" name="imgurl" type="text" class="active"/>
     </div>
 
     <!-- Quantity Adjuster -->
@@ -48,6 +48,7 @@
           name="quantity"
           value="1"
           required
+          class="active"
         />
         <button id="increase-quantity" type="button">+</button>
       </div>
@@ -55,7 +56,7 @@
 
     <div id="options-container">
       <label for="type">Type</label>
-      <select name="category" id="category" required>
+      <select name="category" id="category" required class="active">
         <% categories.forEach(category => { %>
         <option value="<%=category.categoryid%>"><%=category.name %></option>
 
@@ -73,13 +74,13 @@
           type="text"
           name="newCategoryName"
           id="newCategoryName"
-          required
+     
         />
       </div>
 
       <div id="input-container">
         <label for="categoryDescription">Category Description</label>
-        <textarea id="categoryDescription" name="categoryDescription" required>
+        <textarea id="categoryDescription" name="categoryDescription" >
         </textarea>
 
         <div id="input-container">
@@ -88,7 +89,7 @@
             id="categoryImgUrl"
             name="categoryImgUrl"
             type="text"
-            required
+
           />
         </div>
       </div>
@@ -147,6 +148,10 @@
     const newCategoryForm = document.getElementById("new-category-form");
     newCategoryForm.style.display = "block";
     hiddenInput.value = "true"; // set hidden input to true.
+    // Add required attributes to new category fields
+    document.getElementById("newCategoryName").setAttribute("required", "true");
+    document.getElementById("categoryDescription").setAttribute("required", "true");
+    document.getElementById("categoryImgUrl").setAttribute("required", "true");
   }
   function hideNewCategoryForm() {
     const newCategoryForm = document.getElementById("new-category-form");
@@ -160,5 +165,9 @@
     categoryDescription.value = "";
     newCategoryName.value = "";
     hiddenInput.value = ""; // set hiddenInput value to nothing.
+      // Remove required attributes from new category fields
+    newCategoryName.removeAttribute("required");
+    categoryDescription.removeAttribute("required");
+    categoryImgUrl.removeAttribute("required");
   }
 </script>

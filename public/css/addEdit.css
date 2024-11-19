@@ -1,11 +1,11 @@
-#new-plant-form input:invalid:focus,
+#new-plant-form input.active:invalid:focus,
 #new-plant-form textarea:invalid:focus {
   border-color: red;
   outline: none;
   box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
 }
 
-#new-plant-form input:valid:focus,
+#new-plant-form input.active:valid:focus,
 textarea:valid:focus {
   border-color: green;
   outline: none;

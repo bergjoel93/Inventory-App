@@ -40,25 +40,25 @@ const postAddNewPlant = [
     const processedImgUrl = imgurl.trim() === "" ? null : imgurl;
 
     try {
-      // const categoryId = await createNewCategoryIfNeeded(
-      //   // if new category created, will return id.
-      //   category,
-      //   newCategoryName,
-      //   categoryDescription,
-      //   categoryImgUrl
-      // ); //
-      // // Add the new plant to the database
-      // await queries.addPlant(
-      //   name,
-      //   scientificname,
-      //   description,
-      //   processedImgUrl,
-      //   quantity,
-      //   categoryId
-      // );
-      // const newPlant = await queries.getPlantByName(name);
-      // const newPlantId = newPlant ? newPlant.plantid : null;
-      // res.redirect(`/plant/${newPlantId}`); // redirect to new plant page.
+      const categoryId = await createNewCategoryIfNeeded(
+        // if new category created, will return id.
+        category,
+        newCategoryName,
+        categoryDescription,
+        categoryImgUrl,
+      ); //
+      // Add the new plant to the database
+      await queries.addPlant(
+        name,
+        scientificname,
+        description,
+        processedImgUrl,
+        quantity,
+        categoryId,
+      );
+      const newPlant = await queries.getPlantByName(name);
+      const newPlantId = newPlant ? newPlant.plantid : null;
+      res.redirect(`/plant/${newPlantId}`); // redirect to new plant page.
     } catch (error) {
       console.error("Error retrieving :", error);
       res.status(500).send("Error retrieving categories");
@@ -81,62 +81,42 @@ const updateQuantity = async (req, res) => {
   }
 };
 
-const postUpdatePlant = async (req, res) => {
-  const plantId = req.params.plantid;
-  // const errors = validationResult(req);
-  // if (!errors.isEmpty()) {
-  //   // If validation errors, retreive categories and re-render form with errors.
-  //   const categories = await queries.getAllCategories();
-  //   return res.status(400).render("index", {
-  //     title: "Add new plant",
-  //     categories: categories,
-  //     body: "add",
-  //     errors: errors.array(), // pass validation errors to view
-  //     formData: req.body, // Pass current form data to repopulate the form.
-  //   });
-  // }
+const postUpdatePlant = [
+  validator.validateOldPlant,
+  async (req, res) => {
+    const plantId = req.params.plantid;
+    const plant = queries.getPlantById(plantId);
+    const categories = await queries.getAllCategories();
+    const errors = validationResult(req);
 
-  // Retrieve updated data from req.body
-  const {
-    name,
-    scientificname,
-    description,
-    imgurl,
-    quantity,
-    category, // Can be an existing category ID or "other-type"
-    newCategoryName,
-    categoryDescription,
-    categoryImgUrl,
-  } = req.body;
+    // console.log("Errors", errors);
 
-  try {
-    // Determine the correct category ID (either an existing one or a newly created one)
-    // TODO
-    const categoryId = await createNewCategoryIfNeeded(
-      category,
-      newCategoryName,
-      categoryDescription,
-      categoryImgUrl
-    );
+    if (!errors.isEmpty()) {
+      // Serialize errors and form data to pass them in the query parameters
+      const errorMessages = encodeURIComponent(JSON.stringify(errors.array()));
+      return res.redirect(`/plant/edit/${plantId}?errors=${errorMessages}`);
+    }
+    // Retrieve updated data from req.body
+    const { scientificname, description, imgurl, quantity } = req.body;
 
-    // Update the plant in the database
-    await queries.updatePlant(
-      plantId,
-      name,
-      scientificname,
-      description,
-      imgurl,
-      quantity,
-      categoryId
-    );
+    try {
+      // Update the plant in the database
+      await queries.updatePlant(
+        plantId,
+        scientificname,
+        description,
+        imgurl,
+        quantity,
+      );
 
-    // Redirect back to the updated plant’s detail page
-    res.redirect(`/plant/${plantId}`);
-  } catch (error) {
-    console.error("Error updating plant:", error);
-    res.status(500).send("Error updating plant");
-  }
-};
+      // Redirect back to the updated plant’s detail page
+      res.redirect(`/plant/${plantId}`);
+    } catch (error) {
+      console.error("Error updating plant:", error);
+      res.status(500).send("Error updating plant");
+    }
+  },
+];
 
 const postDeletePlant = async (req, res) => {
   queries.deletePlantById(req.params.plantid);
@@ -149,14 +129,14 @@ const createNewCategoryIfNeeded = async (
   category,
   newCategoryName,
   categoryDescription,
-  categoryImgUrl
+  categoryImgUrl,
 ) => {
   if (category === "other-type") {
     // Add the new category to the database
     const newCategory = await queries.addCategory(
       newCategoryName,
       categoryDescription,
-      categoryImgUrl
+      categoryImgUrl,
     );
     return newCategory.categoryid;
   }
