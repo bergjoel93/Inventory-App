@@ -1,30 +1,36 @@
 <!-- views/partials/add.ejs -->
 
 <div id="add-container">
-  <form action="/add/new" method="post">
+  <form
+    action="/add/new"
+    method="post"
+    onsubmit="return validateForm(event)"
+    id="new-plant-form"
+  >
     <h1>Add New Plant</h1>
-
-    <% if (errors) { %>
-    <ul>
-      <% errors.forEach(error => { %>
-      <li><%= error.msg %></li>
-      <% }) %>
-    </ul>
-    <% } %>
+    <div id="errors-container">
+      <% if (errors) { %>
+      <ul>
+        <% errors.forEach(error => { %>
+        <li><%= error.msg %></li>
+        <% }) %>
+      </ul>
+      <% } %>
+    </div>
 
     <div id="input-container">
       <label for="name">Name</label>
-      <input id="name" name="name" type="text" />
+      <input id="name" name="name" type="text" required />
     </div>
 
     <div id="input-container">
       <label for="scientificname">Scientific Name</label>
-      <input id="scientificname" name="scientificname" type="text" />
+      <input id="scientificname" name="scientificname" type="text" required />
     </div>
 
     <div id="input-container">
       <label for="description">Description</label>
-      <textarea id="description" name="description"> </textarea>
+      <textarea id="description" name="description" required> </textarea>
     </div>
 
     <div id="input-container">
@@ -36,14 +42,20 @@
     <div id="quantity-adjuster-container">
       <div id="quantity-adjuster">
         <button id="decrease-quantity" type="button">-</button>
-        <input type="number" id="quantity-input" name="quantity" value="1" />
+        <input
+          type="number"
+          id="quantity-input"
+          name="quantity"
+          value="1"
+          required
+        />
         <button id="increase-quantity" type="button">+</button>
       </div>
     </div>
 
     <div id="options-container">
       <label for="type">Type</label>
-      <select name="category" id="category">
+      <select name="category" id="category" required>
         <% categories.forEach(category => { %>
         <option value="<%=category.categoryid%>"><%=category.name %></option>
 
@@ -57,17 +69,27 @@
       <input type="hidden" id="hiddenInput" name="newCategory" value="" />
       <div id="input-container">
         <label for="newCategoryName">Type Name</label>
-        <input type="text" name="newCategoryName" id="newCategoryName" />
+        <input
+          type="text"
+          name="newCategoryName"
+          id="newCategoryName"
+          required
+        />
       </div>
 
       <div id="input-container">
         <label for="categoryDescription">Category Description</label>
-        <textarea id="categoryDescription" name="categoryDescription">
+        <textarea id="categoryDescription" name="categoryDescription" required>
         </textarea>
 
         <div id="input-container">
           <label for="categoryImgUrl">Image URL</label>
-          <input id="categoryImgUrl" name="categoryImgUrl" type="text" />
+          <input
+            id="categoryImgUrl"
+            name="categoryImgUrl"
+            type="text"
+            required
+          />
         </div>
       </div>
     </div>
@@ -81,6 +103,22 @@
   const quantityInput = document.getElementById("quantity-input");
   const increaseButton = document.getElementById("increase-quantity");
   const decreaseButton = document.getElementById("decrease-quantity");
+
+  function validateForm(event) {
+    // Prevent form from submitting right away.
+    event.preventDefault();
+
+    console.log("Event:", event);
+
+    // Peform the checks here
+    const category = document.getElementById("category");
+    console.log("Category:", category.value);
+    if (category.value === "other-type") {
+      confirm("Are you sure you want to add a new plant Type or Category?");
+    }
+    console.log("New plant would submit now. ");
+    document.getElementById("new-plant-form").submit();
+  }
 
   // Event listeners for the buttons
   increaseButton.addEventListener("click", () => {

@@ -150,18 +150,18 @@ const getNewPlantForm = async (req, res) => {
 
 const postUpdatePlant = async (req, res) => {
   const plantId = req.params.plantid;
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    // If validation errors, retreive categories and re-render form with errors.
-    const categories = await queries.getAllCategories();
-    return res.status(400).render("index", {
-      title: "Add new plant",
-      categories: categories,
-      body: "add",
-      errors: errors.array(), // pass validation errors to view
-      formData: req.body, // Pass current form data to repopulate the form.
-    });
-  }
+  // const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   // If validation errors, retreive categories and re-render form with errors.
+  //   const categories = await queries.getAllCategories();
+  //   return res.status(400).render("index", {
+  //     title: "Add new plant",
+  //     categories: categories,
+  //     body: "add",
+  //     errors: errors.array(), // pass validation errors to view
+  //     formData: req.body, // Pass current form data to repopulate the form.
+  //   });
+  // }
 
   // Retrieve updated data from req.body
   const {

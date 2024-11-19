@@ -33,7 +33,22 @@
     </div>
 
     <div id="edit-plant-container">
-      <button id="edit-plant-button">Edit This Plant</button>
+      <div id="button-container">
+        <button id="edit-plant-button" type="button">Edit This Plant</button>
+
+        <form
+          action="/delete/plant/<%=plant.plantid%>/<%=category.categoryid%>"
+          method="post"
+        >
+          <button
+            id="delete-plant-button"
+            onclick="return confirm('Are you sure you want to delete this plant?')"
+            type="submit"
+          >
+            Delete this Plant
+          </button>
+        </form>
+      </div>
     </div>
   </div>
 </div>
@@ -42,9 +57,19 @@
   const quantityInput = document.getElementById("quantity-input");
   const increaseButton = document.getElementById("increase-quantity");
   const decreaseButton = document.getElementById("decrease-quantity");
+  const deletePlantButton = document.getElementById("delete-plant-button");
   const plantId = "<%= plant.plantid %>";
 
   const editButton = document.getElementById("edit-plant-button");
+
+  // deletePlantButton.addEventListener("click", () => {
+  //   // render delete dialoge box.
+  //   const confirmation = confirm("Are you sure you want to delete this plant?");
+  //   if (confirmation) {
+  //     // If user confirms, redirect to the delete plant URL.
+  //     window.location.href = `/delete/plant/${plantId}`;
+  //   }
+  // });
 
   editButton.addEventListener("click", () => {
     // Redirect to the edit page for this plant.

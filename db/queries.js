@@ -167,6 +167,22 @@ const getPlantByName = async (name) => {
   }
 };
 
+// Function to delete a plant by plantId
+const deletePlantById = async (plantId) => {
+  console.log(plantId);
+  try {
+    const result = await db.query(
+      "DELETE FROM plants WHERE plantid = $1 RETURNING *",
+      [plantId]
+    );
+
+    return result.rows[0]; // Return the deleted plant's details for confirmation
+  } catch (error) {
+    console.error("Error deleting plant by ID:", error);
+    throw error;
+  }
+};
+
 // Export the functions for use in other parts of your app
 module.exports = {
   getAllCategories,
@@ -179,4 +195,5 @@ module.exports = {
   getCategoryByName,
   addPlant,
   getPlantByName,
+  deletePlantById,
 };

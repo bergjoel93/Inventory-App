@@ -7,24 +7,34 @@ require("dotenv").config();
 const router = express.Router();
 
 const controller = require("../controllers/controller");
+const getPlantsController = require("../controllers/getPlantsController");
+const postPlantsController = require("../controllers/postPlantsController");
+const categoriesController = require("../controllers/categoriesController");
 
 const {
   validatePlant,
   checkValidationResults,
 } = require("../validators/plantValidator");
-
-router.get("/", controller.getCategories);
-router.get("/plants/:categoryid", controller.getPlantsByCategory);
-router.get("/plant/:plantid", controller.getPlant);
-router.post("/update-quantity/:plantid", controller.updateQuantity);
-router.get("/plant/edit/:plantid", controller.getEditPlantPage);
-router.post("/plant/update/:plantid", controller.postUpdatePlant);
-router.get("/add", controller.getNewPlantForm);
+// Home
+router.get("/", categoriesController.getCategories);
+//Partial to display all categoires.
+router.get("/plants/:categoryid", getPlantsController.getPlantsByCategory);
+// Partial to display individual Plant Page
+router.get("/plant/:plantid", getPlantsController.getPlant);
+// updates the plant quantity
+router.post("/update-quantity/:plantid", postPlantsController.updateQuantity);
+// sends use to edit plant page.
+router.get("/plant/edit/:plantid", getPlantsController.getEditPlantPage);
+// updates the plant data
+router.post("/plant/update/:plantid", postPlantsController.postUpdatePlant);
+// Sends user to add a new plant page
+router.get("/add", getPlantsController.getNewPlantForm);
+// adds a new plant to the database.
+router.post("/add/new", postPlantsController.postAddNewPlant);
+// deletes plant from the database.
 router.post(
-  "/add/new",
-  validatePlant,
-  checkValidationResults,
-  controller.postAddNewPlant
+  "/delete/plant/:plantid/:categoryid",
+  postPlantsController.postDeletePlant
 );
 
 module.exports = router;

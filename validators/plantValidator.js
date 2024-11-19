@@ -2,7 +2,9 @@
 const queries = require("../db/queries");
 const { body, validationResult } = require("express-validator");
 
-const validatePlant = [
+const validateOldPlant = [];
+
+const validateNewPlant = [
   // General plant validations
   body("name")
     .trim()
@@ -10,9 +12,13 @@ const validatePlant = [
     .withMessage("Plant name is required.")
     .isLength({ min: 2, max: 60 })
     .withMessage("Plant name must be between 2 and 60 characters.")
-    .matches(/^[a-zA-Z\s]*$/)
-    .withMessage("Plant name must only contain letters and spaces.")
-    .escape(),
+    .escape()
+    .custom(async (value) => {
+      const existingPlant = await queries.getPlantByName(value);
+      if (existingPlant) {
+        throw new Error("A plant with this name already exists.");
+      }
+    }),
 
   body("scientificname")
     .trim()
@@ -53,7 +59,13 @@ const validatePlant = [
     .withMessage("New category name must be between 2 and 60 characters.")
     .matches(/^[a-zA-Z\s]*$/)
     .withMessage("New category name must only contain letters and spaces.")
-    .escape(),
+    .escape()
+    .custom(async (value) => {
+      const existingCategory = await queries.getCategoryByName(value);
+      if (existingCategory) {
+        throw new Error("A category with this name already exists.");
+      }
+    }),
 
   body("categoryDescription")
     .if(body("category").equals("other-type"))
@@ -72,29 +84,29 @@ const validatePlant = [
     .withMessage("New category image URL must be valid."),
 ];
 
-const checkValidationResults = async (req, res, next) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    try {
-      const categories = await queries.getAllCategories(); // Fetch categories for form rendering
+// const checkValidationResults = async (req, res, next) => {
+//   const errors = validationResult(req);
+//   if (!errors.isEmpty()) {
+//     try {
+//       const categories = await queries.getAllCategories(); // Fetch categories for form rendering
 
-      return res.status(400).render("index", {
-        title: "Add New Plant",
-        body: "add",
-        categories: categories, // Pass categories to render them in the dropdown
-        errors: errors.array(), // Pass the validation errors to the view
-        formData: req.body, // Repopulate the form with the current data
-      });
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      return res.status(500).send("Error fetching categories");
-    }
-  }
-  console.log("No validation errors found");
-  next();
-};
+//       return res.status(400).render("index", {
+//         title: "Add New Plant",
+//         body: "add",
+//         categories: categories, // Pass categories to render them in the dropdown
+//         errors: errors.array(), // Pass the validation errors to the view
+//         formData: req.body, // Repopulate the form with the current data
+//       });
+//     } catch (error) {
+//       console.error("Error fetching categories:", error);
+//       return res.status(500).send("Error fetching categories");
+//     }
+//   }
+//   console.log("No validation errors found");
+//   next();
+// };
 
 module.exports = {
-  validatePlant,
-  checkValidationResults,
+  validateNewPlant,
+  // checkValidationResults,
 };

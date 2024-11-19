@@ -6,7 +6,7 @@
 
     <div id="input-container">
       <label for="name">Name</label>
-      <input id="name" name="name" type="text" value="<%=plant.name %>" />
+      <input id="name" name="name" type="text" value="<%=plant.name %>" disabled/>
     </div>
 
     <div id="input-container">
@@ -49,7 +49,7 @@
 
     <div id="options-container">
       <label for="type">Type</label>
-      <select name="category" id="category">
+      <select name="category" id="category" disabled>
         <% categories.forEach(category => { %>
         <option value="<%=category.categoryid%>"
           <%= category.categoryid === plant.categoryid ? 'selected' : '' %>>
