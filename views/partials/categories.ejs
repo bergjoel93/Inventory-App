@@ -1,17 +1,21 @@
 <!-- views/categories.ejs -->
-<h2>Carnivorous Plants</h2>
 
-<div id="card-container">
-  <% categories.forEach(category =>{ %>
-  <div id="card">
-    <a href="/plants/<%= category.categoryid %>">
-      <div id="img-container">
-        <img src="<%= category.imgurl %>" alt="<%=category.name%> img" />
-      </div>
-      <div id="name-container">
-        <h3><%= category.name %></h3>
-      </div>
-    </a>
+<div id="categories-container">
+  <h2>Carnivorous Plants</h2>
+
+  <div id="card-container">
+    <% categories.forEach(category =>{ %>
+    <div id="card">
+      <a href="/plants/<%= category.categoryid %>">
+        <div id="img-container">
+          <img src="<%= category.imgurl %>" alt="<%=category.name%> img" />
+        </div>
+        <div id="name-container">
+          <h3><%= category.name %></h3>
+        </div>
+      </a>
+    </div>
+    <%}) %>
   </div>
-  <%}) %>
 </div>
+

@@ -1,0 +1,100 @@
+#edit-categories-container p {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+#categories-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 12px;
+}
+
+#category-item {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  justify-content: space-around;
+  align-items: center;
+  border-bottom: 1px solid grey;
+  padding: 12px;
+}
+
+#category-item img {
+  width: 80px;
+  height: 80px;
+}
+
+#category-item a {
+  background-color: green;
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
+}
+
+#category-item a:hover {
+  background-color: rgb(114, 251, 114);
+}
+
+#add-edit-new-category-container {
+  width: 100%;
+  height: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#add-edit-new-category-form-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#add-edit-new-category-form-container form {
+  width: 500px;
+}
+
+#add-new-category-button-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 12px;
+}
+
+#add-new-category-button {
+  padding: 12px;
+  background-color: green;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.5s ease;
+}
+
+#add-new-category-button:hover {
+  background-color: rgb(119, 209, 119);
+}
+
+#delete-button {
+  background-color: red;
+  transition: background-color 0.5s ease;
+}
+
+#delete-button:hover {
+  background-color: rgb(243, 110, 110);
+}
+
+/* Small Screens */
+@media only screen and (max-width: 600px) {
+  #plant-container-2 {
+    flex-direction: column;
+  }
+  #add-edit-new-category-form-container {
+    width: 300px;
+  }
+}

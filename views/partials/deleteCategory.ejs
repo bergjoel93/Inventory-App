@@ -1,0 +1,10 @@
+<div id="delete-message">
+    <h1>You have successfully deleted <%=category.name %> and all of the plants associated with it. </h1>
+    <h3>You will be redirected back to the home page in a few seconds...</h3>
+</div>
+<script>
+    // Redirect after a few seconds.
+    setTimeout(() => {
+      res.redirect("/");
+    }, 3000);
+</script>

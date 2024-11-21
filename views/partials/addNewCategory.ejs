@@ -1,5 +1,5 @@
-<!-- /views/partials/editCategory.ejs -->
 <div id="add-edit-new-category-container">
+    <h1>Add a New Category</h1>
     <div id="errors-container">
       <% if (errors) { %>
       <ul>
@@ -10,21 +10,21 @@
       <% } %>
     </div>
     <div id="add-edit-new-category-form-container">
-        <form action="/updateCategory/<%= category.categoryid%>" method="post">
-            <input type="hidden" value="<%= category.name%>" name ="oldName">
+        <form action="/addNewCategory" method="post">
             <div id="input-container">
-                <label for="name">Name</label>
+                <label for="name">Name </label>
                 <input
                 type="text"
                 name="name"
                 id="name"
-                value = "<%= category.name%>"
+                value="<%=oldData.name%>"
                 />
             </div>
 
             <div id="input-container">
                 <label for="description">Description</label>
-                <textarea id="description" name="description" ><%= category.description%>
+                <textarea id="description" name="description" >
+                <%=oldData.description%>
                 </textarea>
 
                 <div id="input-container">
@@ -33,7 +33,7 @@
                     id="imgurl"
                     name="imgurl"
                     type="text"
-                    value = "<%= category.imgurl%>"
+                    value="<%=oldData.imgurl%>"
                 />
                 </div>
             </div>
@@ -42,20 +42,6 @@
                 <button type="submit">Save</button>
             </div>
         </form>
-        <form action="/deleteCategory/<%= category.categoryid %>" method="POST" style="margin-top: 20px;">
-            <button type="submit" id="delete-button" onclick="return confirmDelete();">
-            Delete this Category
-            </button>
-        </form>
     </div>
 
-
 </div>
-
-<script>
-  function confirmDelete() {
-    return confirm(
-      "If you delete this category, all plants within this category will also be deleted. Are you sure?"
-    );
-  }
-</script>

@@ -6,15 +6,10 @@ require("dotenv").config();
 
 const router = express.Router();
 
-const controller = require("../controllers/controller");
 const getPlantsController = require("../controllers/getPlantsController");
 const postPlantsController = require("../controllers/postPlantsController");
 const categoriesController = require("../controllers/categoriesController");
 
-const {
-  validatePlant,
-  checkValidationResults,
-} = require("../validators/plantValidator");
 // Home
 router.get("/", categoriesController.getCategories);
 //Partial to display all categoires.
@@ -34,8 +29,24 @@ router.post("/add/new", postPlantsController.postAddNewPlant);
 // deletes plant from the database.
 router.post(
   "/delete/plant/:plantid/:categoryid",
-  postPlantsController.postDeletePlant,
+  postPlantsController.postDeletePlant
 );
+
 router.get("/editCategories", categoriesController.getEditCategories);
+router.get("/editCategory/:categoryid", categoriesController.getEditCategory);
+router.get("/newCategory", categoriesController.getAddNewCategory);
+
+// Adds a new category to the database
+router.post("/addNewCategory", categoriesController.postAddNewCategory);
+// Updates an existing category in the database.
+router.post(
+  "/updateCategory/:categoryid",
+  categoriesController.postUpdateCategory
+);
+// Deletes a category from the database.
+router.post(
+  "/deleteCategory/:categoryid",
+  categoriesController.postDeleteCategory
+);
 
 module.exports = router;

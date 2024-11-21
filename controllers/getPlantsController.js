@@ -16,7 +16,7 @@ const getPlantsByCategory = async (req, res) => {
       title: "Plant List",
       body: "plants",
       plants: plants,
-      categoryName: category.name, // pass category name to template.
+      category: category, // pass category to template.
     });
   } catch (error) {
     console.error("Error retrieving plants by category:", error);

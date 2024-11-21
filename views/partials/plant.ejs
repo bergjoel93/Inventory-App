@@ -11,15 +11,26 @@
 </div>
 
 <div id="plant-container">
-  <div id="plant-img-container">
-    <img src="<%=plant.imgurl%>" alt="<%=plant.name%> picture" />
-  </div>
-  <div id="plant-info-container">
-    <h2><%=plant.name%></h2>
-    <h3><%= plant.scientificname %></h3>
-    <p id="plant-description"><%= plant.description %></p>
 
-    <!-- Quantity Adjuster -->
+  <div id="plant-container-1">
+    <h1><%=plant.name%></h1>
+  </div>
+
+  <div id="plant-container-2">
+
+    <div id="plant-img-container">
+      <img src="<%=plant.imgurl%>" alt="<%=plant.name%> picture" />
+    </div>
+
+    <div id="plant-info-container">
+      <h3><%= plant.scientificname %></h3>
+      <p id="plant-description"><%= plant.description %></p>
+    </div>
+
+  </div>
+
+  <div id="plant-container-3">
+      <!-- Quantity Adjuster -->
     <div id="quantity-adjuster-container">
       <div id="quantity-adjuster">
         <button id="decrease-quantity">-</button>
@@ -50,26 +61,18 @@
         </form>
       </div>
     </div>
+
   </div>
+
 </div>
 
 <script>
   const quantityInput = document.getElementById("quantity-input");
   const increaseButton = document.getElementById("increase-quantity");
   const decreaseButton = document.getElementById("decrease-quantity");
-  const deletePlantButton = document.getElementById("delete-plant-button");
   const plantId = "<%= plant.plantid %>";
 
   const editButton = document.getElementById("edit-plant-button");
-
-  // deletePlantButton.addEventListener("click", () => {
-  //   // render delete dialoge box.
-  //   const confirmation = confirm("Are you sure you want to delete this plant?");
-  //   if (confirmation) {
-  //     // If user confirms, redirect to the delete plant URL.
-  //     window.location.href = `/delete/plant/${plantId}`;
-  //   }
-  // });
 
   editButton.addEventListener("click", () => {
     // Redirect to the edit page for this plant.

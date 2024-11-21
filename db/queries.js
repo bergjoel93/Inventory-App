@@ -76,14 +76,15 @@ const updatePlant = async (
   scientificName,
   description,
   imgURL,
-  quantity
+  quantity,
+  categoryid
 ) => {
   try {
     const result = await db.query(
       `UPDATE plants 
-       SET scientificname = $1, description = $2, imgurl = $3, quantity = $4
-       WHERE plantid = $5`,
-      [scientificName, description, imgURL, quantity, plantId]
+       SET scientificname = $1, description = $2, imgurl = $3, quantity = $4, categoryid = $5
+       WHERE plantid = $6`,
+      [scientificName, description, imgURL, quantity, categoryid, plantId]
     );
     return result;
   } catch (error) {
@@ -91,7 +92,6 @@ const updatePlant = async (
     throw error;
   }
 };
-
 
 const addCategory = async (name, description, imgURL = null) => {
   try {
@@ -182,6 +182,38 @@ const deletePlantById = async (plantId) => {
   }
 };
 
+// Function to delete a category and its plants
+const deleteCategoryById = async (categoryId) => {
+  try {
+    await db.query("DELETE FROM plants WHERE categoryid = $1", [categoryId]); // Delete plants first
+    const result = await db.query(
+      "DELETE FROM categories WHERE categoryid = $1 RETURNING *",
+      [categoryId]
+    ); // Delete category
+    return result.rows[0]; // Return deleted category
+  } catch (error) {
+    console.error("Error deleting category by ID:", error);
+    throw error;
+  }
+};
+
+// Function to update a category in the database
+const updateCategoryById = async (categoryId, name, description, imgurl) => {
+  try {
+    const result = await db.query(
+      `UPDATE categories 
+       SET name = $1, description = $2, imgurl = COALESCE($3, imgurl)
+       WHERE categoryid = $4
+       RETURNING *`,
+      [name, description, imgurl, categoryId]
+    );
+    return result.rows[0]; // Return the updated category
+  } catch (error) {
+    console.error("Error updating category by ID:", error);
+    throw error;
+  }
+};
+
 // Export the functions for use in other parts of your app
 module.exports = {
   getAllCategories,
@@ -195,4 +227,6 @@ module.exports = {
   addPlant,
   getPlantByName,
   deletePlantById,
+  deleteCategoryById,
+  updateCategoryById,
 };

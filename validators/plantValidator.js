@@ -18,15 +18,15 @@ const validateOldPlant = [
     .trim()
     .notEmpty()
     .withMessage("Description is required.")
+    .escape()
     .customSanitizer((value) => {
       return value
         .replace(/&#x27;/g, "'") // Restore single quotes
         .replace(/&quot;/g, '"') // Restore double quotes
-        .replace(/&amp;/g, "&") // Restore ampersands
-        .replace(/&lt;/g, "<") // Restore less-than signs
-        .replace(/&gt;/g, ">"); // Restore greater-than signs
-    })
-    .escape(),
+        .replace(/&amp;/g, "and") // Restore ampersands
+        .replace(/&lt;/g, "[") // Restore less-than signs
+        .replace(/&gt;/g, "]"); // Restore greater-than signs
+    }),
 
   body("imgurl")
     .trim()
@@ -39,7 +39,7 @@ const validateOldPlant = [
       // Otherwise, check if it's a valid URL
       if (!/^https?:\/\/[^\s$.?#].[^\s]*$/.test(value)) {
         throw new Error(
-          "Image URL must be a valid URL or '/img/defaultImg.png'.",
+          "Image URL must be a valid URL or '/img/defaultImg.png'."
         );
       }
       return true;
@@ -54,7 +54,6 @@ const validateNewPlant = [
     .withMessage("Plant name is required.")
     .isLength({ min: 2, max: 60 })
     .withMessage("Plant name must be between 2 and 60 characters.")
-    .escape()
     .custom(async (value) => {
       const existingPlant = await queries.getPlantByName(value);
       if (existingPlant) {
@@ -98,7 +97,7 @@ const validateNewPlant = [
       // Otherwise, check if it's a valid URL
       if (!/^https?:\/\/[^\s$.?#].[^\s]*$/.test(value)) {
         throw new Error(
-          "Image URL must be a valid URL or '/img/defaultImg.png'.",
+          "Image URL must be a valid URL or '/img/defaultImg.png'."
         );
       }
       return true;

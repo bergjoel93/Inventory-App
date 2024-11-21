@@ -2,7 +2,7 @@
 /**
  * This module contains: postAddNewPlant, updateQuantity, postUpdatePlant
  */
-const { body, validationResult } = require("express-validator"); // import express validator
+const { validationResult } = require("express-validator"); // import express validator
 const queries = require("../db/queries"); // Import the queries file
 // Add New Plant and Sanitize form data.
 
@@ -22,7 +22,6 @@ const postAddNewPlant = [
         errors: errors.array(),
       });
     }
-    console.log("This went through.");
 
     const {
       name,
@@ -45,7 +44,7 @@ const postAddNewPlant = [
         category,
         newCategoryName,
         categoryDescription,
-        categoryImgUrl,
+        categoryImgUrl
       ); //
       // Add the new plant to the database
       await queries.addPlant(
@@ -54,7 +53,7 @@ const postAddNewPlant = [
         description,
         processedImgUrl,
         quantity,
-        categoryId,
+        categoryId
       );
       const newPlant = await queries.getPlantByName(name);
       const newPlantId = newPlant ? newPlant.plantid : null;
@@ -97,7 +96,8 @@ const postUpdatePlant = [
       return res.redirect(`/plant/edit/${plantId}?errors=${errorMessages}`);
     }
     // Retrieve updated data from req.body
-    const { scientificname, description, imgurl, quantity } = req.body;
+    const { scientificname, description, imgurl, quantity, category } =
+      req.body;
 
     try {
       // Update the plant in the database
@@ -107,6 +107,7 @@ const postUpdatePlant = [
         description,
         imgurl,
         quantity,
+        category
       );
 
       // Redirect back to the updated plant’s detail page
@@ -129,14 +130,14 @@ const createNewCategoryIfNeeded = async (
   category,
   newCategoryName,
   categoryDescription,
-  categoryImgUrl,
+  categoryImgUrl
 ) => {
   if (category === "other-type") {
     // Add the new category to the database
     const newCategory = await queries.addCategory(
       newCategoryName,
       categoryDescription,
-      categoryImgUrl,
+      categoryImgUrl
     );
     return newCategory.categoryid;
   }

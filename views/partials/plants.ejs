@@ -5,23 +5,31 @@
     <li>
       <a href="/">Home</a>
     </li>
-    <li><a href="#"><%= categoryName %></a></li>
+    <li><a href="#"><%= category.name %></a></li>
   </ul>
 </div>
 
-<h2><%= categoryName %></h2>
+<div id="plants-container">
+  <h2><%= category.name %></h2>
 
-<div id="card-container">
-  <% plants.forEach(plant =>{ %>
-  <div id="card">
-    <a href="/plant/<%= plant.plantid %>">
-      <div id="img-container">
-        <img src="<%= plant.imgurl %>" alt="<%=plant.name%> img" />
-      </div>
-      <div id="name-container">
-        <h3><%= plant.name %></h3>
-      </div>
-    </a>
+  <div id="category-description-container">
+    <p id="category-description"><%=category.description%></p>
   </div>
-  <%}) %>
+
+  <div id="card-container">
+    <% plants.forEach(plant =>{ %>
+    <div id="card">
+      <a href="/plant/<%= plant.plantid %>">
+        <div id="img-container">
+          <img src="<%= plant.imgurl %>" alt="<%=plant.name%> img" />
+        </div>
+        <div id="name-container">
+          <h3><%= plant.name %></h3>
+        </div>
+      </a>
+    </div>
+    <%}) %>
+  </div>
+
 </div>
+
