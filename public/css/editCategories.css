@@ -95,7 +95,7 @@
   #plant-container-2 {
     flex-direction: column;
   }
-  #add-edit-new-category-form-container {
+  #add-edit-new-category-form-container form {
     width: 300px;
   }
 }
